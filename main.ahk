@@ -31,7 +31,7 @@ return
 ^!F4::
 WinGetActiveTitle, Title
 WinGet, PID, PID, %Title%
-MsgBox, 4, 注意, 将强制关闭标题为"%Title%"的窗口, 进程为%PID%, 是否继续?
+MsgBox, 0x104, 注意, 将强制关闭标题为"%Title%"的窗口, 进程为%PID%, 是否继续?
 IfMsgBox, No
     return
 Process, Close, %PID%
