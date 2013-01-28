@@ -135,6 +135,28 @@ loop
 }
 return
 
+;;copy 此文件的全路径名，并对目录分隔符进行转义
+!4:: 
+path := CopySelection()
+if path = 
+    return
+MouseGetPos,x0
+clipboard = %path%
+
+StringReplace, temp, clipboard, \, \\, All
+MsgBox, %temp%
+tooltip Path: "%clipboard%" copied
+loop
+{
+    MouseGetPos,x1 ;鼠标挪动取消提示框
+    if x1!=%x0%
+    { 
+        tooltip
+        break
+    }
+}
+return
+
 ;;http://www.autohotkey.com/board/topic/79494-go-to-anything-browseexploregoogle-the-selected-text/
 ;; Go to anything that is in the currently selected text: URLs, email addresses, Windows paths, or just "Google it"
 $#G::
@@ -243,12 +265,14 @@ ControlGetText, ctrl_text, %ctrl_id%, ahk_id %win_id%
 ActiveWinTitle := MouseIsOverTitlebar()
 If ActiveWinTitle!=0 ;鼠标下是标题栏
 {
-    ToolTip, %win_title%
+    ToolTip, Window Title:"%win_title%" copied.
     clipboard=%win_title%
 }
 else ;鼠标下是控件
 {
-    ToolTip, %ctrl_text%
+    if ctrl_text = 
+        return
+    ToolTip, Control Text:"%ctrl_text%" copied.
     clipboard=%ctrl_text%
 }
 loop
