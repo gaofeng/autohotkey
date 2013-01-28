@@ -24,7 +24,8 @@ Loop, Parse, Menu, |
 ;;Customize tray menu
 #Persistent  ; Keep the script running until the user exits it.
 Menu, tray, add  ; Creates a separator line.
-Menu, tray, add, Edit In &Notepad++, EditInNPP
+Menu, tray, add, Edit MAIN In &ST2, EditMainInST2
+Menu, tray, add, Edit MENU In &ST2, EditMenuInST2
 Menu, tray, add, Open &Location, OpenScriptDir
 Menu, FileMenu, add
 return
@@ -70,8 +71,12 @@ COMView:
 Run, D:\Work\DLL & COM\ShowActiveXIF.exe %file_path%
 return
 
-EditInNPP:
-Run, C:\Program Files\Notepad++\notepad++.exe %A_ScriptFullPath%
+EditMainInST2:
+Run, D:\Program Files\Sublime Text 2\sublime_text.exe %A_ScriptFullPath%
+return
+
+EditMenuInST2:
+Run, D:\Program Files\Sublime Text 2\sublime_text.exe %A_ScriptDir%\menu.ahk
 return
 
 OpenScriptDir:

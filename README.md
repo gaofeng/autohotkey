@@ -3,7 +3,11 @@ autohotkey
 
 全局：
 
-g@    扩展为gaofengdiskonline@gmail.com
+g@    
+扩展为gaofengdiskonline@gmail.com
+
+Ctrl+Alt+F4    
+将当前窗口所属进程强制杀死
 
 
 命令行窗口：

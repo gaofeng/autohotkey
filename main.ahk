@@ -27,13 +27,23 @@ return
 :o:$s::$(SolutionDir)
 :o:$p::$(ProjectDir)
 
+
+^!F4::
+WinGetActiveTitle, Title
+WinGet, PID, PID, %Title%
+MsgBox, 4, 注意, 将强制关闭标题为"%Title%"的窗口, 进程为%PID%, 是否继续?
+IfMsgBox, No
+    return
+Process, Close, %PID%
+return
+
 ;;运行读卡器测试页面
-^+r::
+^+a::
 Run, %A_ProgramFiles%\Internet Explorer\iexplore.exe D:\Subversion\SmartCardReader\CardReaderATL\TestCardReader.html
 return
 
 ^+s::
-Run, %A_ProgramFiles%\Internet Explorer\iexplore.exe D:\Subversion\ScannerTwain\DWScannerTwainATL\DWScannerTest.html
+Run, %A_ProgramFiles%\Internet Explorer\iexplore.exe D:\Subversion\VCProject_trunk\ScannerTwain\DWScannerTwainATL\DWScannerTest.html
 return
 
 ;;在命令行窗口启用快捷键粘贴
