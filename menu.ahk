@@ -68,7 +68,7 @@ NullHandler:
 return
 
 COMView:
-Run, D:\Work\DLL & COM\ShowActiveXIF.exe %file_path%
+Run, D:\Work\DLL & COM\ShowActiveXIF.exe "%file_path%"
 return
 
 EditMainInST2:
