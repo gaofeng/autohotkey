@@ -24,8 +24,8 @@ Loop, Parse, Menu, |
 ;;Customize tray menu
 #Persistent  ; Keep the script running until the user exits it.
 Menu, tray, add  ; Creates a separator line.
-Menu, tray, add, Edit MAIN In &ST2, EditMainInST2
-Menu, tray, add, Edit MENU In &ST2, EditMenuInST2
+Menu, tray, add, Edit m&ain.ahk, EditMainAHK
+Menu, tray, add, Edit m&enu.ahk, EditMenuAHK
 Menu, tray, add, Open &Location, OpenScriptDir
 Menu, FileMenu, add
 return
@@ -67,16 +67,30 @@ return
 NullHandler:
 return
 
+GetEditorPath()
+{
+	ahk_path := A_AhkPath
+	SplitPath, ahk_path,, dir
+	scite_path := dir . "\SciTe\SciTE.exe"
+	IfExist, %scite_path%
+	{
+		return %scite_path%
+	}
+	return "D:\Program Files\Sublime Text 2\sublime_text.exe"
+}
+
 COMView:
 Run, D:\Work\DLL & COM\ShowActiveXIF.exe "%file_path%"
 return
 
-EditMainInST2:
-Run, D:\Program Files\Sublime Text 2\sublime_text.exe %A_ScriptFullPath%
+EditMainAHK:
+EditorPath := GetEditorPath()
+Run, %EditorPath% %A_ScriptFullPath%
 return
 
-EditMenuInST2:
-Run, D:\Program Files\Sublime Text 2\sublime_text.exe %A_ScriptDir%\menu.ahk
+EditMenuAHK:
+EditorPath := GetEditorPath()
+Run, %EditorPath% %A_ScriptDir%\menu.ahk
 return
 
 OpenScriptDir:

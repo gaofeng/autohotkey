@@ -27,6 +27,9 @@ return
 :o:$s::$(SolutionDir)
 :o:$p::$(ProjectDir)
 
+^!t::
+
+return
 
 ^!F4::
 WinGetActiveTitle, Title
@@ -116,7 +119,7 @@ loop
 }
 return 
 
-;;copy 此文件的全路径名 
+;;Alt+3 copy 此文件的全路径名 
 !3:: 
 path := CopySelection()
 if path = 
@@ -135,17 +138,15 @@ loop
 }
 return
 
-;;copy 此文件的全路径名，并对目录分隔符进行转义
+;;Alt+4 copy 此文件的全路径名，并对目录分隔符进行转义
 !4:: 
 path := CopySelection()
 if path = 
     return
 MouseGetPos,x0
-clipboard = %path%
-
-StringReplace, temp, clipboard, \, \\, All
-MsgBox, %temp%
-tooltip Path: "%clipboard%" copied
+clipboard = "%path%"
+StringReplace, clipboard, clipboard, \, \\, All
+tooltip Text: %clipboard% copied
 loop
 {
     MouseGetPos,x1 ;鼠标挪动取消提示框
@@ -155,6 +156,18 @@ loop
         break
     }
 }
+return
+
+;;Ctrl+Alt+O: Treat selected text as a local path, and select it in Explorer.
+^!o::
+path := CopySelection()
+ifExist, %path%
+{
+	cmd := "explorer.exe /select," path
+	Run, %cmd%
+}
+else
+	MsgBox, Please select a path text.
 return
 
 ;;http://www.autohotkey.com/board/topic/79494-go-to-anything-browseexploregoogle-the-selected-text/
