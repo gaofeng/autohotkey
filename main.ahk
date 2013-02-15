@@ -178,6 +178,7 @@ return
 ;;Ctrl+Alt+O: Treat selected text as a local path, and select it in Explorer.
 ^!o::
 path := CopySelection()
+path := Trim(path)
 ifExist, %path%
 {
 	cmd := "explorer.exe /select," path

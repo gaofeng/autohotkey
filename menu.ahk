@@ -33,11 +33,11 @@ Menu, FileMenu, add
 return
 
 Reg:
-Run, regsvr32 %file_path%
+Run, regsvr32 "%file_path%"
 return
 
 UnReg:
-Run, regsvr32 /u %file_path%
+Run, regsvr32 /u "%file_path%"
 return
 
 #z::
