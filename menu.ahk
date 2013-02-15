@@ -3,8 +3,10 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
+
+
 Menu = Utils|Settings|Folders
-Utils = Utils|DeviceManager|RegEdit|TaskManager|NumToChn
+Utils = Utils|DriverList|DeviceManager|RegEdit|TaskManager|NumToChn
 Settings = SETTINGS|ControlPanel|Display
 Folders = FOLDERS|Windows|ProgramFiles|Desktop
 Loop, Parse, Menu, |
@@ -106,7 +108,11 @@ Folders:
 Settings:
 Utils:
 Menu,%A_ThisLabel%, Show
-Return
+return
+
+DriverList:
+#include Removable.ahk
+return
 
 DeviceManager:
 Run, devmgmt.msc

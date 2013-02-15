@@ -1,29 +1,20 @@
 ;Removable.ahk
 ; Eject removable drives by doubleclicking.
 ;Skrommel @2007
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-#SingleInstance,Force
-#NoEnv
-#NoTrayIcon
-
-applicationname=Removable
-
-Gui,+ToolWindow +Resize ;-Border -Caption
+applicationname=Driver List
+Gui, Destroy
+Gui, +Resize ;-Border -Caption
 Gui,Margin,0,0
-Gui,Add,ListView,Vlistview GLISTVIEW,Drive|Volume Label|Type|Free Space|Capacity|Filesystem|Status|Serial Number
-Gui,Add,Text,vtext,%A_Space%For more tools, information and donations, visit 
-Gui,Add,Text,x+5 cBlue vurl G1HOURSOFTWARE,www.1HourSoftware.com
-
-hCurs:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt") ;IDC_HAND
-OnMessage(0x200,"WM_MOUSEMOVE") 
-
-DriveGet,list,List
-Loop,Parse,list,
-{
-  drive:=A_LoopField ":"
-  Gosub,DRIVEGET
-  LV_Add("",drive,label,type,free " MB",capacity " MB",fs,status,serial)
-}
+Gui,Add,ListView, AltSubmit Grid vlistview gLISTVIEW,Drive|Label|Type|Free Space|Capacity|Filesystem|Status|Serial Number
+Gui,Add,Button,vrefresh_btn gRefreshDrivers, Refresh 
+Menu, MyContextMenu, Add, Open, OPENDRIVER
+Menu, MyContextMenu, Add, Eject, EJECT
+gosub RefreshDrivers
 
 Loop,8
   LV_ModifyCol(A_Index,"AutoHdr")
@@ -36,6 +27,16 @@ LV_ModifyCol(8,"Integer Right")
 Gui,Show,w600 h200,%applicationname%
 Return
 
+RefreshDrivers:
+  LV_Delete()
+  DriveGet,list,List
+  Loop,Parse,list,
+  {
+    drive:=A_LoopField ":"
+    Gosub,DRIVEGET
+    LV_Add("",drive,label,type,free " MB",capacity " MB",fs,status,serial)
+  }
+return
 
 DRIVEGET:
 DriveGet,type,Type,%drive%\
@@ -53,7 +54,7 @@ capacity=
 Loop,% part_0
 {
   If ((A_Index=4 Or A_Index=8) And part_0>A_Index)
-    capacity:=capacity " "
+    capacity:=capacity ","
   pos:=part_0-A_Index+1
   capacity:=capacity . part_%pos%
 }
@@ -66,7 +67,7 @@ free=
 Loop,% part_0
 {
   If ((A_Index=4 Or A_Index=8) And part_0>A_Index)
-    free:=free " "
+    free:=free ""
   pos:=part_0-A_Index+1
   free:=free . part_%pos%
 }
@@ -79,10 +80,27 @@ Return
 
 LISTVIEW:
 row:=A_EventInfo
+If A_GuiEvent=RightClick
+  Gosub,ContextMenu
 If A_GuiEvent=DoubleClick
-  Gosub,EJECT
+  gosub, OPENDRIVER
 Return
 
+ContextMenu:
+LV_GetText(status,row,7)
+if (status != "ready")
+  return
+Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
+return
+
+
+OPENDRIVER:
+LV_GetText(drive,row,1)
+LV_GetText(status,row,7)
+if (status != "ready")
+  return
+run, %drive%
+return
 
 EJECT:
 LV_GetText(drive,row,1)
@@ -144,31 +162,9 @@ LV_Modify(row,"",drive,label,type,free,capacity,fs,status,serial)
 Return
 
 
-1HOURSOFTWARE:
-Run,http://www.1hoursoftware.com,,UseErrorLevel
-Return
-
-
-WM_MOUSEMOVE(wParam,lParam)
-{
-  Global hCurs
-  MouseGetPos,,,winid,ctrl
-  If ctrl in Static2
-    DllCall("SetCursor","UInt",hCurs)
-}
-Return
-
-
 GuiSize:
 If A_EventInfo = 1  ; Minimized
   Return
-GuiControl,Move,listview,% "W" . (A_GuiWidth) . " H" . (A_GuiHeight-20)
-GuiControl,Move,text,% " Y" . (A_GuiHeight-17)
-GuiControl,Move,url,% " Y" . (A_GuiHeight-17)
+GuiControl,Move,listview,% "W" . (A_GuiWidth) . " H" . (A_GuiHeight-25)
+GuiControl,Move,refresh_btn,% " Y" . (A_GuiHeight-25)
 Return
-
-
-GuiClose:
-OnMessage(0x200,"") 
-DllCall("DestroyCursor","Uint",hCurs)
-ExitApp
