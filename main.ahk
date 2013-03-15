@@ -51,7 +51,7 @@ return
 ^!F4::
 WinGetActiveTitle, Title
 WinGet, PID, PID, %Title%
-MsgBox, 0x104, 注意, 将强制关闭标题为"%Title%"的窗口, 进程为%PID%, 是否继续?
+MsgBox, 0x104, 强制关闭进程, 将强制关闭标题为"%Title%"的窗口, 进程号为%PID%, 是否继续?
 IfMsgBox, No
     return
 Process, Close, %PID%
@@ -370,7 +370,8 @@ SetTimer, RemoveToolTip, Off
 ToolTip
 return
  
-Esc::RapidHotkey("!{F4}",2)
+ ;Will cause one click ESC key useless for now.
+;Esc::RapidHotkey("!{F4}",2)
 ~e::RapidHotkey("#e""#r",3) ;Run Windows Explorer
 ~LButton & RButton::RapidHotkey("Menu1""Menu2""Menu3",1,0.3,1)
 Menu1:
